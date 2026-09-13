@@ -2,8 +2,8 @@
 
 Free background remover that runs entirely in the browser. No signup, no upload, no limits.
 
-Live: https://dropbg-d5d.pages.dev/ (Cloudflare Pages, production)
-Mirror: https://nirvanaguha.github.io/dropbg/ (GitHub Pages)
+Live: https://dropbg.app/ (Cloudflare Pages, production; also dropbg-d5d.pages.dev)
+Mirror: https://nirvanaguha.github.io/dropbg/ (GitHub Pages, canonicals point at dropbg.app)
 
 ## How it works
 
@@ -27,8 +27,8 @@ SITE_URL=https://example.com/ npx vite build   # set canonical/OG origin for a c
 Production is Cloudflare Pages (project `dropbg`, unlimited bandwidth, custom domains). Requires a one-time `npx wrangler login`:
 
 ```bash
-npm run deploy:cf                                   # canonical origin = https://dropbg-d5d.pages.dev/
-SITE_URL=https://yourdomain.com/ npm run deploy:cf  # after attaching a custom domain
+npm run deploy:cf                                   # canonical origin = https://dropbg.app/
+SITE_URL=https://other.example/ npm run deploy:cf   # override the origin if ever needed
 ```
 
 A GitHub Pages mirror is published from the `gh-pages` branch with `npm run deploy:gh`.

@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "vite build",
-    "deploy:cf": "SITE_URL=${SITE_URL:-https://dropbg-d5d.pages.dev/} vite build && npx wrangler pages deploy dist --project-name dropbg --branch main --commit-dirty=true",
-    "deploy:gh": "vite build && node scripts/deploy.mjs"
+    "deploy:cf": "SITE_URL=${SITE_URL:-https://dropbg.app/} vite build && npx wrangler pages deploy dist --project-name dropbg --branch main --commit-dirty=true",
+    "deploy:gh": "SITE_URL=${SITE_URL:-https://dropbg.app/} vite build && node scripts/deploy.mjs"
   },
   "keywords": [],
   "author": "",

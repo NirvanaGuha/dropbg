@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 // Public origin used in canonical/OG tags. Override at build time once a custom domain exists:
 //   SITE_URL=https://dropbg.app/ npx vite build
-const SITE_URL = process.env.SITE_URL || 'https://dropbg-d5d.pages.dev/';
+const SITE_URL = process.env.SITE_URL || 'https://dropbg.app/';
 
 export default defineConfig({
   base: './',
