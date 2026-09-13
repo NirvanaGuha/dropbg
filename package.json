@@ -19,6 +19,7 @@
     "vite": "^8.3.0"
   },
   "dependencies": {
-    "@imgly/background-removal": "^1.7.0"
+    "@imgly/background-removal": "^1.7.0",
+    "fflate": "^0.8.3"
   }
 }

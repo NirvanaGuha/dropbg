@@ -1,0 +1,10 @@
+name = "dropbg-api"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+# Public values. The Replicate token is a secret: `npx wrangler secret put REPLICATE_API_TOKEN` (run inside worker/).
+POLAR_ORG_ID = ""
+ALLOWED_ORIGINS = "https://dropbg.app,https://www.dropbg.app,https://dropbg-d5d.pages.dev,http://localhost:5179"
+REPLICATE_MODEL = "men1scus/birefnet"
+MAX_BYTES = "20000000"

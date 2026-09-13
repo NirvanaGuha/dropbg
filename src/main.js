@@ -1,4 +1,7 @@
 import { removeBackground, preload } from '@imgly/background-removal';
+import { zipSync } from 'fflate';
+import { PRO } from './config.js';
+import * as pro from './pro.js';
 
 // Canonical host: Pages _redirects cannot match hostnames, so collapse www here.
 if (location.hostname.startsWith('www.')) location.replace(location.href.replace('//www.', '//'));
@@ -10,6 +13,7 @@ const pick = $('#pick');
 const status = $('#status');
 const results = $('#results');
 $('#year').textContent = new Date().getFullYear();
+pro.mountPro();
 
 // ---- model config -----------------------------------------------------------
 const hasWebGPU = typeof navigator !== 'undefined' && 'gpu' in navigator;
@@ -83,6 +87,32 @@ document.addEventListener('paste', (e) => {
   if (files.length) { e.preventDefault(); enqueue(files.map((f, i) => f.name ? f : new File([f], `pasted-${Date.now()}-${i}.png`, { type: f.type }))); }
 });
 
+// ---- batch (Pro) --------------------------------------------------------------
+const cards = [];
+const batchbar = $('#batchbar');
+function updateBatch() {
+  if (!PRO.enabled) return;
+  const done = cards.filter((c) => c.done);
+  batchbar.hidden = done.length < 2;
+  $('.batch-count', batchbar).textContent = `${done.length} images ready`;
+}
+$('#zipall')?.addEventListener('click', async () => {
+  if (!pro.requirePro('Batch download')) return;
+  const btn = $('#zipall'); btn.disabled = true; const prev = btn.innerHTML; btn.textContent = 'Zipping…';
+  try {
+    const files = {}; const seen = new Map();
+    for (const c of cards.filter((x) => x.done)) {
+      const n = (seen.get(c.baseName) || 0) + 1; seen.set(c.baseName, n);
+      const name = `${c.baseName}${n > 1 ? `-${n}` : ''}-no-bg.png`;
+      files[name] = new Uint8Array(await (await c.composite()).arrayBuffer());
+    }
+    const zip = zipSync(files, { level: 0 }); // PNGs are already compressed
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([zip], { type: 'application/zip' })); a.download = 'dropbg-cutouts.zip';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  } finally { btn.disabled = false; btn.innerHTML = prev; }
+});
+
 // ---- queue -----------------------------------------------------------------
 const queue = [];
 let running = false;
@@ -90,6 +120,7 @@ function enqueue(files) {
   for (const f of files) {
     if (!f.type.startsWith('image/')) continue;
     const card = renderCard(f);
+    cards.push(card);
     queue.push({ file: f, card });
   }
   if (queue.length && results.firstElementChild) results.firstElementChild.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -159,6 +190,7 @@ function renderCard(file) {
       </div>
       <div class="actions">
         <button class="btn ghost act-copy" disabled title="Copy PNG to clipboard">Copy</button>
+        <button class="btn act-refine" disabled hidden title="Second pass with a larger model for hair and fine edges (Pro)">HD Refine <span class="pro-tag">Pro</span></button>
         <button class="btn primary act-download" disabled>Download PNG</button>
       </div>
     </div>`;
@@ -172,6 +204,7 @@ function renderCard(file) {
   const split = $('.split', el);
   const dl = $('.act-download', el);
   const copy = $('.act-copy', el);
+  const refineBtn = $('.act-refine', el);
   const swatches = [...el.querySelectorAll('.sw')];
 
   let resultBlob = null;
@@ -231,14 +264,36 @@ function renderCard(file) {
     }
   });
 
+  function showResult(blob) {
+    resultBlob = blob;
+    const url = URL.createObjectURL(blob);
+    result.onload = () => { syncSize(); };
+    result.src = url; result.style.visibility = 'visible';
+  }
+  refineBtn.addEventListener('click', async () => {
+    if (!pro.requirePro('HD Refine')) return;
+    refineBtn.disabled = true; refineBtn.textContent = 'Refining…'; stage.classList.add('is-busy');
+    const t0 = performance.now();
+    try {
+      const hd = await pro.refine(file);
+      showResult(hd);
+      meta.textContent = `HD ✦ refined in ${((performance.now() - t0) / 1000).toFixed(1)}s · ${(hd.size / 1048576).toFixed(1)} MB`;
+      refineBtn.textContent = 'HD ✓';
+    } catch (e) {
+      meta.textContent = `HD Refine failed: ${e.message}`; meta.classList.add('err');
+      refineBtn.disabled = false; refineBtn.innerHTML = 'HD Refine <span class="pro-tag">Pro</span>';
+    } finally { stage.classList.remove('is-busy'); }
+  });
+
   return {
+    file, baseName, composite,
+    get done() { return Boolean(resultBlob); },
     busy() { meta.textContent = 'Removing background…'; },
     done(blob, ms) {
-      resultBlob = blob;
-      const url = URL.createObjectURL(blob);
-      result.onload = () => { syncSize(); URL.revokeObjectURL(origUrl); };
-      result.src = url; result.style.visibility = 'visible';
+      showResult(blob);
       stage.classList.remove('is-busy');
+      refineBtn.hidden = !PRO.refineEnabled; refineBtn.disabled = false;
+      updateBatch();
       handle.hidden = false; split.disabled = false; split.value = 50; stage.style.setProperty('--split', '50%');
       dl.disabled = false; copy.disabled = !('ClipboardItem' in window);
       meta.textContent = `Done in ${(ms / 1000).toFixed(1)}s · ${(blob.size / 1048576).toFixed(1)} MB`;

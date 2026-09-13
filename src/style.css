@@ -141,3 +141,36 @@ footer { margin-top: 72px; border-top: 1px solid var(--line); padding: 28px 0 40
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
 footer a { color: var(--muted); margin-right: 16px; }
 .sr { position: absolute; left: -9999px; }
+
+/* ---- Pro ------------------------------------------------------------------ */
+.pro-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: #fff3c4; color: #8a5a00; border-radius: 6px; padding: 2px 6px; margin-left: 6px; vertical-align: middle; }
+.btn.primary .pro-tag { background: rgba(255,255,255,.25); color: #fff; }
+.nav-pro { color: var(--accent) !important; font-weight: 600; }
+.nav-pro.is-pro { color: #8a5a00 !important; }
+html.is-pro .pro-tag { display: none; }
+.batchbar { max-width: 760px; margin: 22px auto 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; font-size: 14px; color: var(--muted); }
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; max-width: 760px; }
+.plan { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+.plan-pro { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.plan h3 { margin: 0; font-size: 18px; }
+.plan-price { font-size: 34px; font-weight: 700; letter-spacing: -.02em; }
+.plan-price small { font-size: 13px; font-weight: 500; color: var(--muted); }
+.plan ul { margin: 0; padding-left: 18px; color: #2a2e38; font-size: 15px; flex: 1; }
+.plan li { margin: 4px 0; }
+.pro-dialog { border: 0; border-radius: 18px; padding: 0; max-width: 460px; width: calc(100% - 32px); box-shadow: 0 30px 80px -20px rgba(0,0,0,.35); }
+.pro-dialog::backdrop { background: rgba(15,17,21,.45); backdrop-filter: blur(2px); }
+.pro-box { margin: 0; padding: 26px 26px 22px; position: relative; font: inherit; }
+.pro-close { position: absolute; top: 10px; right: 12px; border: 0; background: transparent; font-size: 24px; line-height: 1; color: var(--muted); cursor: pointer; }
+.pro-context { background: var(--accent-soft); color: var(--accent); font-weight: 600; font-size: 13px; border-radius: 8px; padding: 6px 10px; margin-bottom: 12px; }
+.pro-box h3 { margin: 0 0 10px; font-size: 22px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+.pro-price { font-size: 13px; font-weight: 600; color: var(--muted); }
+.pro-perks { margin: 0 0 16px; padding: 0; list-style: none; color: #2a2e38; font-size: 15px; }
+.pro-perks li { padding: 6px 0 6px 22px; position: relative; }
+.pro-perks li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 700; }
+.pro-buy { width: 100%; justify-content: center; padding: 12px; font-size: 16px; }
+.pro-fine { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+.pro-keylabel { display: block; margin-top: 16px; font-size: 13px; color: var(--muted); font-weight: 600; }
+.pro-keyrow { display: flex; gap: 8px; margin-top: 6px; }
+.pro-key { flex: 1; font: 14px var(--mono); padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; }
+.pro-msg { min-height: 18px; font-size: 13px; margin-top: 8px; color: var(--muted); }
+.pro-msg.ok { color: var(--ok); } .pro-msg.err { color: #b42318; }
