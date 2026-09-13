@@ -15,6 +15,10 @@ export default {
     if (url.pathname === '/health') {
       return json({ ok: true, refine: Boolean(env.REPLICATE_API_TOKEN), polar: Boolean(env.POLAR_ORG_ID), model: env.REPLICATE_MODEL }, 200, cors);
     }
+    // Pro waitlist: POST /waitlist {email}  |  GET /waitlist/export (Bearer EXPORT_TOKEN) -> CSV
+    if (url.pathname === '/waitlist' && request.method === 'POST') return waitlistAdd(request, env, cors, origin);
+    if (url.pathname === '/waitlist/export' && request.method === 'GET') return waitlistExport(request, env);
+
     if (url.pathname !== '/refine' || request.method !== 'POST') return json({ error: 'Not found' }, 404, cors);
     if (!isAllowedOrigin(origin, env)) return json({ error: 'Origin not allowed' }, 403, cors);
     if (!env.REPLICATE_API_TOKEN || !env.POLAR_ORG_ID) return json({ error: 'HD Refine is not configured yet.' }, 503, cors);
@@ -66,6 +70,41 @@ export default {
     return new Response(img.body, { status: 200, headers: { ...cors, 'Content-Type': 'image/png', 'Cache-Control': 'no-store', 'X-Prediction-Id': pred.id || '' } });
   },
 };
+
+async function waitlistAdd(request, env, cors, origin) {
+  if (!isAllowedOrigin(origin, env)) return json({ error: 'Origin not allowed' }, 403, cors);
+  if (!env.WAITLIST) return json({ error: 'Waitlist not configured.' }, 503, cors);
+  let body = {};
+  try { body = await request.json(); } catch { return json({ error: 'Bad request.' }, 400, cors); }
+  if (body.website) return json({ ok: true }, 200, cors); // honeypot filled by a bot: pretend success
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) return json({ error: 'That email address does not look right.' }, 422, cors);
+  const existing = await env.WAITLIST.get(email);
+  if (!existing) {
+    await env.WAITLIST.put(email, JSON.stringify({
+      ts: new Date().toISOString(),
+      source: String(body.source || '').slice(0, 60),
+      country: request.cf?.country || '',
+      ua: (request.headers.get('User-Agent') || '').slice(0, 160),
+    }));
+  }
+  return json({ ok: true, already: Boolean(existing) }, 200, cors);
+}
+async function waitlistExport(request, env) {
+  const auth = request.headers.get('Authorization') || '';
+  if (!env.EXPORT_TOKEN || auth !== `Bearer ${env.EXPORT_TOKEN}`) return new Response('Unauthorized', { status: 401 });
+  const rows = ['email,joined_at,source,country'];
+  let cursor;
+  do {
+    const page = await env.WAITLIST.list({ cursor, limit: 1000 });
+    for (const k of page.keys) {
+      const v = JSON.parse((await env.WAITLIST.get(k.name)) || '{}');
+      rows.push([k.name, v.ts || '', v.source || '', v.country || ''].map((x) => `"${String(x).replace(/"/g, '""')}"`).join(','));
+    }
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor);
+  return new Response(rows.join('\n') + '\n', { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store' } });
+}
 
 function isAllowedOrigin(origin, env) {
   return (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).includes(origin);

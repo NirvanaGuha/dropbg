@@ -8,3 +8,7 @@ POLAR_ORG_ID = ""
 ALLOWED_ORIGINS = "https://dropbg.app,https://www.dropbg.app,https://dropbg-d5d.pages.dev,http://localhost:5179"
 REPLICATE_MODEL = "men1scus/birefnet"
 MAX_BYTES = "20000000"
+
+[[kv_namespaces]]
+binding = "WAITLIST"
+id = "6433273be7764e74834fe6737dc995a1"

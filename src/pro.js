@@ -146,7 +146,40 @@ export function requirePro(feature) {
   return false;
 }
 
+// ---- Coming-soon waitlist (shown while Pro is not configured) --------------------
+function mountWaitlist() {
+  const section = document.querySelector('[data-waitlist-section]');
+  const nav = document.querySelector('[data-waitlist-nav]');
+  if (PRO.enabled) { section?.remove(); nav?.remove(); return; }
+  const form = document.getElementById('waitlist');
+  if (!form) return;
+  const msg = form.querySelector('.soon-msg');
+  const input = form.querySelector('#wl-email');
+  const btn = form.querySelector('button');
+  try { if (localStorage.getItem('dropbg.waitlist')) { msg.textContent = "You're on the list. We'll email you once, when Pro ships."; msg.className = 'soon-msg ok'; input.disabled = btn.disabled = true; } } catch {}
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); form.requestSubmit(); } });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = input.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'Please enter a valid email address.'; msg.className = 'soon-msg err'; input.focus(); return; }
+    if (!PRO.apiBase) { msg.textContent = 'Signups are not configured yet.'; msg.className = 'soon-msg err'; return; }
+    btn.disabled = true; msg.textContent = 'Adding you…'; msg.className = 'soon-msg';
+    try {
+      const res = await fetch(`${PRO.apiBase}/waitlist`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, website: form.website.value, source: 'dropbg.app/pro-soon' }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `Signup failed (${res.status}).`);
+      msg.textContent = data.already ? "You're already on the list." : "You're on the list. We'll email you once, when Pro ships.";
+      msg.className = 'soon-msg ok'; input.disabled = true;
+      try { localStorage.setItem('dropbg.waitlist', '1'); } catch {}
+    } catch (err) {
+      msg.textContent = err.message; msg.className = 'soon-msg err'; btn.disabled = false;
+    }
+  });
+}
+
 export function mountPro() {
+  mountWaitlist();
   if (!PRO.enabled) return;
   // Dev-only shortcut for local testing. Compiled out of production builds.
   if (import.meta.env.DEV && new URLSearchParams(location.search).get('pro') === 'dev') {

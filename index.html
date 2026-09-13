@@ -34,6 +34,7 @@
       <a class="hide-sm" href="./how-to-remove-background">How it works</a>
       <a href="#faq">FAQ</a>
       <a href="#pro" class="nav-pro" data-pro-open data-pro-badge hidden>Get Pro</a>
+      <a href="#pro-soon" class="nav-pro" data-waitlist-nav>Pro <span class="soon">soon</span></a>
     </nav>
   </header>
 
@@ -78,6 +79,32 @@
       </div>
     </section>
 
+    <section class="section" id="pro-soon" data-waitlist-section>
+      <div class="soon-card">
+        <div class="soon-copy">
+          <div class="pill"><span class="dot"></span> Pro Mode · coming soon</div>
+          <h2>The free remover stays free. Pro adds the power-user extras.</h2>
+          <ul class="soon-list">
+            <li><strong>Batch download.</strong> Drop a whole folder, get one .zip back.</li>
+            <li><strong>HD Refine.</strong> A second pass with a larger model for hair, fur and fine edges.</li>
+            <li><strong>Background presets.</strong> Marketplace white, brand colours, soft shadows.</li>
+            <li><strong>No ads.</strong> One-time payment, no subscription, all your devices.</li>
+          </ul>
+          <p class="soon-fine">Planned as a one-time purchase around $9. Early-list members get it at the launch price for life.</p>
+        </div>
+        <form class="soon-form" id="waitlist" novalidate>
+          <label for="wl-email">Get notified when Pro launches</label>
+          <div class="soon-row">
+            <input id="wl-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+            <button class="btn primary" type="submit">Notify me</button>
+          </div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="sr" aria-hidden="true">
+          <p class="soon-msg" role="status" aria-live="polite"></p>
+          <p class="soon-fine">One email when it ships. No newsletter, no sharing your address.</p>
+        </form>
+      </div>
+    </section>
+
     <section class="section" id="pro" data-pro-section hidden>
       <h2>Free forever. Pro if you want more.</h2>
       <p class="sub">The remover stays free, unlimited and full resolution. Pro is a one-time payment for the power-user extras.</p>
@@ -102,7 +129,7 @@
       <details><summary>Why is the first image slow?</summary><p>The first run downloads the model, roughly 40 to 90 MB depending on your device. Your browser caches it, so the next images take a second or two. On a phone or a slow connection the first load can take a minute.</p></details>
       <details><summary>How good is the cutout?</summary><p>Very good on people, products, pets and objects with a clear edge. Like every automatic tool, it is weakest on fine hair against a busy background, semi-transparent glass and thin wires. You get the full-resolution result to touch up if needed.</p></details>
       <details><summary>Is this a replacement for remove.bg?</summary><p>For the everyday case, yes: one photo in, one transparent PNG out. Read the <a href="./remove-bg-alternative">full comparison</a> for what changes when remove.bg moves to Canva and what DropBG does differently.</p></details>
-      <details><summary>What does Pro add, and is it a subscription?</summary><p>Pro is a one-time payment, not a subscription. It adds batch download as a .zip, HD Refine (a second pass with a larger server-side model for hair and fine edges) and removes ads. The free remover stays unlimited and full resolution. HD Refine is the only feature that sends an image anywhere: it goes to our server for that one pass and is not stored.</p></details>
+      <details><summary>What is Pro Mode, and when is it coming?</summary><p>Pro is a planned one-time purchase, not a subscription. It will add batch download as a .zip, HD Refine (a second pass with a larger server-side model for hair and fine edges), background presets and no ads. The free remover stays unlimited and full resolution. <a href="#pro-soon">Join the list</a> to hear when it launches and lock in the launch price.</p></details>
       <details><summary>Can I use the results commercially?</summary><p>Yes. The output is your image. There is no licence on cutouts you make here.</p></details>
     </section>
   </main>
