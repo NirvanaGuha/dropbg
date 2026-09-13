@@ -156,26 +156,68 @@ function mountWaitlist() {
   const msg = form.querySelector('.soon-msg');
   const input = form.querySelector('#wl-email');
   const btn = form.querySelector('button');
-  try { if (localStorage.getItem('dropbg.waitlist')) { msg.textContent = "You're on the list. We'll email you once, when Pro ships."; msg.className = 'soon-msg ok'; input.disabled = btn.disabled = true; } } catch {}
+  try { if (localStorage.getItem(WL_KEY)) { msg.textContent = "You're on the list. We'll email you once, when Pro ships."; msg.className = 'soon-msg ok'; input.disabled = btn.disabled = true; } } catch {}
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); form.requestSubmit(); } });
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = input.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = 'Please enter a valid email address.'; msg.className = 'soon-msg err'; input.focus(); return; }
-    if (!PRO.apiBase) { msg.textContent = 'Signups are not configured yet.'; msg.className = 'soon-msg err'; return; }
     btn.disabled = true; msg.textContent = 'Adding you…'; msg.className = 'soon-msg';
-    try {
-      const res = await fetch(`${PRO.apiBase}/waitlist`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, website: form.website.value, source: 'dropbg.app/pro-soon' }) });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || `Signup failed (${res.status}).`);
-      msg.textContent = data.already ? "You're already on the list." : "You're on the list. We'll email you once, when Pro ships.";
+    const r = await submitWaitlist(input.value.trim(), 'dropbg.app/pro-soon', form.website.value);
+    if (r.ok) {
+      msg.textContent = r.already ? "You're already on the list." : "You're on the list. We'll email you once, when Pro ships.";
       msg.className = 'soon-msg ok'; input.disabled = true;
-      try { localStorage.setItem('dropbg.waitlist', '1'); } catch {}
-    } catch (err) {
-      msg.textContent = err.message; msg.className = 'soon-msg err'; btn.disabled = false;
-    }
+    } else { msg.textContent = r.error; msg.className = 'soon-msg err'; btn.disabled = false; if (!r.error.includes('configured')) input.focus(); }
   });
+}
+
+const WL_KEY = 'dropbg.waitlist';
+const NUDGE_KEY = 'dropbg.nudge.dismissed';
+function onList() { try { return Boolean(localStorage.getItem(WL_KEY)); } catch { return false; } }
+function nudgeDismissed() { try { return Boolean(localStorage.getItem(NUDGE_KEY)); } catch { return false; } }
+
+export async function submitWaitlist(email, source, honeypot = '') {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { ok: false, error: 'Please enter a valid email address.' };
+  if (!PRO.apiBase) return { ok: false, error: 'Signups are not configured yet.' };
+  try {
+    const res = await fetch(`${PRO.apiBase}/waitlist`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, website: honeypot, source }) });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return { ok: false, error: data.error || `Signup failed (${res.status}).` };
+    try { localStorage.setItem(WL_KEY, '1'); } catch {}
+    return { ok: true, already: Boolean(data.already) };
+  } catch { return { ok: false, error: 'Could not reach the server. Try again in a moment.' }; }
+}
+
+/** Compact, dismissible waitlist prompt for the moment of value. Returns null when it should not show. */
+export function waitlistNudge(source, headline, onClose) {
+  if (PRO.enabled || !PRO.apiBase || onList() || nudgeDismissed()) return null;
+  const el = document.createElement('form');
+  el.className = 'nudge';
+  el.noValidate = true;
+  el.innerHTML = `
+    <div class="nudge-copy"><strong>${headline}</strong> <span>Pro Mode is coming: batch .zip, HD edge refine, one-time price. Founder's price for the early list.</span></div>
+    <div class="nudge-row">
+      <input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@example.com" aria-label="Email for Pro launch notification">
+      <button type="submit" class="btn primary">Notify me</button>
+      <button type="button" class="nudge-close" aria-label="Dismiss">×</button>
+    </div>
+    <input type="text" name="website" tabindex="-1" autocomplete="off" class="sr" aria-hidden="true">
+    <p class="nudge-msg" role="status" aria-live="polite"></p>`;
+  const msg = el.querySelector('.nudge-msg');
+  const input = el.querySelector('input[type=email]');
+  const btn = el.querySelector('button[type=submit]');
+  el.querySelector('.nudge-close').addEventListener('click', () => { try { localStorage.setItem(NUDGE_KEY, '1'); } catch {} el.remove(); onClose?.(); });
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); el.requestSubmit(); } });
+  el.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true; msg.textContent = 'Adding you…'; msg.className = 'nudge-msg';
+    const r = await submitWaitlist(input.value.trim(), source, el.website.value);
+    if (r.ok) {
+      msg.textContent = r.already ? "You're already on the list." : "You're on the list. One email when Pro ships.";
+      msg.className = 'nudge-msg ok'; input.disabled = true;
+      document.querySelectorAll('.nudge').forEach((n) => { if (n !== el) n.remove(); });
+    } else { msg.textContent = r.error; msg.className = 'nudge-msg err'; btn.disabled = false; }
+  });
+  return el;
 }
 
 export function mountPro() {

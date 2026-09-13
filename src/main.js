@@ -90,9 +90,17 @@ document.addEventListener('paste', (e) => {
 // ---- batch (Pro) --------------------------------------------------------------
 const cards = [];
 const batchbar = $('#batchbar');
+let batchNudge = null;
 function updateBatch() {
-  if (!PRO.enabled) return;
   const done = cards.filter((c) => c.done);
+  if (!PRO.enabled) {
+    // Pro dormant: the person processing several images is the one who would pay for a zip. Ask once, here.
+    if (done.length >= 2 && !batchNudge) {
+      batchNudge = pro.waitlistNudge('dropbg.app/batch-nudge', 'Downloading these one by one?', () => { batchbar.hidden = true; });
+      if (batchNudge) { batchbar.innerHTML = ''; batchbar.classList.add('is-nudge'); batchbar.appendChild(batchNudge); batchbar.hidden = false; }
+    }
+    return;
+  }
   batchbar.hidden = done.length < 2;
   $('.batch-count', batchbar).textContent = `${done.length} images ready`;
 }
@@ -153,6 +161,17 @@ async function processJob({ file, card }) {
   } catch (e) {
     card.fail(describeError(e));
   }
+}
+
+// ---- post-download nudge (once per page load, at the moment of value) -----------------
+let downloadNudgeShown = false;
+function showPostDownloadNudge(cardEl) {
+  if (downloadNudgeShown || PRO.enabled) return;
+  const n = pro.waitlistNudge('dropbg.app/post-download', 'Got what you needed?');
+  if (!n) return;
+  downloadNudgeShown = true;
+  cardEl.appendChild(n);
+  n.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // ---- card UI ----------------------------------------------------------------
@@ -264,6 +283,7 @@ function renderCard(file) {
     a.download = `${baseName}-no-bg.png`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    showPostDownloadNudge(el);
   });
   copy.addEventListener('click', async () => {
     try {
