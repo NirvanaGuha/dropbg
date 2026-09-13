@@ -1,5 +1,8 @@
 import { removeBackground, preload } from '@imgly/background-removal';
 
+// Canonical host: Pages _redirects cannot match hostnames, so collapse www here.
+if (location.hostname.startsWith('www.')) location.replace(location.href.replace('//www.', '//'));
+
 const $ = (s, r = document) => r.querySelector(s);
 const drop = $('#drop');
 const fileInput = $('#file');
