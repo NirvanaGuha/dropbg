@@ -7,6 +7,7 @@ const SITE_URL = process.env.SITE_URL || 'https://dropbg-d5d.pages.dev/';
 
 export default defineConfig({
   base: './',
+  appType: 'mpa',
   plugins: [{
     name: 'site-url',
     transformIndexHtml(html) { return html.replaceAll('https://dropbg.app/', SITE_URL); },
