@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%231f5eff%27/%3E%3Cpath d=%27M8 8h8v8H8zM16 16h8v8h-8z%27 fill=%27%23fff%27/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/src/style.css">
+  <title>Privacy – DropBG</title>
+  <meta name="description" content="DropBG processes images entirely in your browser. No image is uploaded or stored. Here is exactly what the site does and does not collect.">
+  <link rel="canonical" href="https://dropbg.app/privacy.html">
+  <meta name="robots" content="noindex, follow">
+</head>
+<body>
+  <header class="wrap nav">
+    <a class="brand" href="./"><span class="brand-mark"></span>DropBG</a>
+    <nav class="nav-links">
+      <a href="./remove-bg-alternative.html">remove.bg alternative</a>
+      <a class="hide-sm" href="./how-to-remove-background.html">How it works</a>
+      <a href="./#faq">FAQ</a>
+    </nav>
+  </header>
+  <main class="wrap prose">
+    <h1>Privacy</h1>
+    <p class="lede">Short version: your images never leave your device, and we would not know what you processed even if we wanted to.</p>
+
+    <h2>Your images</h2>
+    <p>DropBG runs the background-removal model inside your web browser using WebAssembly and, where available, WebGPU. When you add an image it is read from your device into the page's memory, processed there, and the result is offered to you as a download. No image data, original or result, is transmitted to DropBG or to any third party. Nothing is stored after you close the tab.</p>
+
+    <h2>The model download</h2>
+    <p>The first time you use the tool, your browser downloads the AI model files (roughly 40 to 90 MB) from a content delivery network. This is a plain file download, identical to loading an image or a script, and it contains no information about you or your images. Your browser caches these files so later visits do not download them again.</p>
+
+    <h2>Advertising</h2>
+    <p>DropBG is free and supported by advertising. If ads are shown, they are served by Google AdSense, which may use cookies or similar technologies to show ads based on your prior visits to this or other websites. You can opt out of personalised advertising at <a href="https://www.google.com/settings/ads" rel="noopener">Google Ads Settings</a>. Google's use of advertising cookies is described in the <a href="https://policies.google.com/technologies/ads" rel="noopener">Google advertising policy</a>. Ad scripts never receive your images; they load in a separate part of the page with no access to the processing pipeline.</p>
+
+    <h2>Analytics</h2>
+    <p>We may use privacy-respecting, aggregate analytics to count page views and understand which pages are useful. These do not identify you and do not have access to the images you process.</p>
+
+    <h2>What we do not do</h2>
+    <ul>
+      <li>We do not upload, store, view or train on your images.</li>
+      <li>We do not require an account, email address or any personal information.</li>
+      <li>We do not sell data to anyone.</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy can be sent to the address on the site footer once published. This page was last updated on 13 September 2026.</p>
+  </main>
+  <footer>
+    <div class="wrap">
+      <div>© 2026 DropBG. Built on open-source AI. Your images never leave your device.</div>
+      <div><a href="./how-to-remove-background.html">How to remove a background</a><a href="./remove-bg-alternative.html">remove.bg alternative</a><a href="./privacy.html">Privacy</a></div>
+    </div>
+  </footer>
+</body>
+</html>
