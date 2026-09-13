@@ -156,6 +156,10 @@ async function processJob({ file, card }) {
 }
 
 // ---- card UI ----------------------------------------------------------------
+// Per-page preset (hub variant pages set data-preset on <body>), e.g. {"bg":"#ffffff"}.
+let PRESET = {};
+try { PRESET = JSON.parse(document.body.dataset.preset || '{}'); } catch {}
+
 const SWATCHES = [
   { key: 'transparent', label: 'Transparent', value: null },
   { key: 'white', label: 'White', value: '#ffffff' },
@@ -232,6 +236,13 @@ function renderCard(file) {
       b.addEventListener('click', () => { swatches.forEach((x) => x.classList.remove('is-on')); b.classList.add('is-on'); setBg(SWATCHES.find((s) => s.key === key).value); });
     }
   });
+
+  if (PRESET.bg) {
+    const match = SWATCHES.find((x) => x.value === PRESET.bg);
+    const target = swatches.find((x) => x.dataset.key === (match ? match.key : 'custom'));
+    if (match) target.click();
+    else { const inp = $('input', target); inp.value = PRESET.bg; inp.dispatchEvent(new Event('input')); }
+  }
 
   async function composite() {
     // Returns a Blob: the raw result when transparent, else result flattened onto the chosen colour.

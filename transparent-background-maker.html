@@ -1,15 +1,16 @@
 <!doctype html>
+<!-- GENERATED from index.html + scripts/variants.mjs. Edit those, not this file. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DropBG – Free Background Remover That Runs in Your Browser</title>
-  <meta name="description" content="Remove image backgrounds for free, with no signup and no upload. DropBG runs the AI model inside your browser, so your photos never leave your device. Unlimited, full resolution, transparent PNG.">
-  <link rel="canonical" href="https://dropbg.app/">
+  <title>Transparent Background Maker – Free, No Signup, Runs in Your Browser</title>
+  <meta name="description" content="Make any image background transparent in seconds. Free transparent background maker that runs on your device: no upload, no signup, no watermark, full-resolution PNG.">
+  <link rel="canonical" href="https://dropbg.app/transparent-background-maker">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="DropBG – Free background remover, no signup, no upload">
-  <meta property="og:description" content="Drop a photo, get a transparent PNG. The AI runs in your browser, so nothing is uploaded. Unlimited and free.">
-  <meta property="og:url" content="https://dropbg.app/">
+  <meta property="og:title" content="Transparent Background Maker – Free, No Signup, Runs in Your Browser">
+  <meta property="og:description" content="Make any image background transparent in seconds. Free transparent background maker that runs on your device: no upload, no signup, no watermark, full-resolution PNG.">
+  <meta property="og:url" content="https://dropbg.app/transparent-background-maker">
   <meta property="og:image" content="https://dropbg.app/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f5eff'/%3E%3Cpath d='M8 8h8v8H8zM16 16h8v8h-8z' fill='%23fff'/%3E%3C/svg%3E">
@@ -17,12 +18,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
     {"@type":"WebApplication","name":"DropBG","url":"https://dropbg.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","browserRequirements":"Requires a modern browser with WebAssembly","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free background remover that runs entirely in the browser. No signup, no upload, no limits."},
-    {"@type":"FAQPage","mainEntity":[
-      {"@type":"Question","name":"Is DropBG really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. There are no credits, no watermark, no daily cap, no account and no ads. The free remover runs on your own device, so it costs us nothing to give away. An optional one-time Pro unlock pays for the site."}},
-      {"@type":"Question","name":"Are my photos uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The AI model downloads to your browser once and every image is processed on your own device. You can verify this in your browser's network tab: no image data is sent anywhere."}},
-      {"@type":"Question","name":"Why is the first image slow?","acceptedAnswer":{"@type":"Answer","text":"The first run downloads the model (roughly 40 to 90 MB depending on your device). Your browser caches it, so later images take a second or two."}},
-      {"@type":"Question","name":"Is this a replacement for remove.bg?","acceptedAnswer":{"@type":"Answer","text":"For most everyday photos, yes. remove.bg's standalone site closes on December 1, 2026 and moves into Canva. DropBG gives you the same one-step workflow without a Canva account."}}
-    ]}
+    {"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does my transparent image look white in some apps?","acceptedAnswer":{"@type":"Answer","text":"Some image viewers paint transparent pixels white or black. Drop the PNG onto a coloured slide or use the colour swatches above to preview it on a different background before you download."}},{"@type":"Question","name":"Can I make a GIF or JPG transparent?","acceptedAnswer":{"@type":"Answer","text":"You can load a JPG or a single GIF frame, but the result is saved as a PNG because JPG has no transparency channel and GIF only supports hard one-bit transparency, which ruins hair and soft edges."}},{"@type":"Question","name":"Does it keep the original resolution?","acceptedAnswer":{"@type":"Answer","text":"Yes. The PNG is the same pixel size as the image you dropped in. There is no free-tier downscale."}},{"@type":"Question","name":"Is this really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. No credits, no watermark, no daily cap, no account, and no ads. The remover runs on your own device, so giving it away costs us nothing. An optional one-time Pro unlock pays for the site."}},{"@type":"Question","name":"Is my image uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The AI model downloads to your browser once and every image is processed on your own device. Open your browser's network tab while you use it: you will see the model download and nothing else."}}]}
   ]}
   </script>
 </head>
@@ -41,9 +37,9 @@
   <main class="wrap">
     <!-- hero:start -->
     <section class="hero">
-      <div class="pill"><span class="dot"></span> Runs 100% in your browser. Nothing is uploaded.</div>
-      <h1>Remove image backgrounds.<br><em>Free. No signup. No upload.</em></h1>
-      <p>Drop a photo and get a clean transparent PNG in seconds. The AI runs on your device, so your images stay yours.</p>
+      <div class="pill"><span class="dot"></span> Transparent PNG out. Nothing uploaded.</div>
+      <h1>Make any image background <em>transparent.</em></h1>
+      <p>Drop a JPG, PNG or WebP and get the subject on a real alpha channel. Full resolution, no watermark, and the file never leaves your computer.</p>
     </section>
     <!-- hero:end -->
 
@@ -71,15 +67,33 @@
     </div>
     <div id="results" class="results"></div>
 
-    <!-- variant:start --><!-- variant:end -->
+    <!-- variant:start -->
+    <section class="section variant"><div class="prose">
+      <h2>How to make an image transparent</h2>
+      <ol>
+        <li>Drop the image above, or paste it from your clipboard.</li>
+        <li>Wait a second or two. The checkerboard behind the subject is the transparent area.</li>
+        <li>Drag the slider to compare with the original, then click <em>Download PNG</em>.</li>
+      </ol>
+      <p>The output is a PNG with a true alpha channel, so it drops onto any background in Slides, Canva, Figma, Word or a website without a white box around it. JPG cannot store transparency, which is why the result is always a PNG.</p>
+      <h3>Where a transparent image is useful</h3>
+      <ul>
+        <li>Product cutouts for listings, ads and collages.</li>
+        <li>Headshots on a brand colour for team pages and slides.</li>
+        <li>Stickers, memes and thumbnails.</li>
+        <li>Icons and illustrations scanned from paper.</li>
+      </ul>
+      <div class="tip"><p><strong>Tip.</strong> Transparency is only visible on a checkerboard or a coloured background. If the download looks like it has a white background in a preview app, open it over a dark colour to see the real edges.</p></div>
+    </div></section>
+    <!-- variant:end -->
 
     <section class="section tools-strip" id="tools">
       <h2>One engine, the right preset for the job</h2>
       <p class="sub">Same on-device model, tuned defaults for common tasks. All free, all unlimited.</p>
       <!-- tools:start -->
       <div class="tool-grid">
-        <a class="tool-card is-current" href="./" aria-current="page"><strong>Background remover</strong><span>The general-purpose tool</span></a>
-        <a class="tool-card" href="./transparent-background-maker"><strong>Transparent background maker</strong><span>Any image to a clean transparent PNG</span></a>
+        <a class="tool-card" href="./"><strong>Background remover</strong><span>The general-purpose tool</span></a>
+        <a class="tool-card is-current" href="./transparent-background-maker" aria-current="page"><strong>Transparent background maker</strong><span>Any image to a clean transparent PNG</span></a>
         <a class="tool-card" href="./png-maker"><strong>PNG maker</strong><span>Photo to transparent PNG, one step</span></a>
         <a class="tool-card" href="./remove-background-from-logo"><strong>Logo background remover</strong><span>Kill the white box behind a logo</span></a>
         <a class="tool-card" href="./remove-background-from-signature"><strong>Signature background remover</strong><span>Paper photo to transparent signature</span></a>
@@ -145,13 +159,11 @@
     <section class="section faq" id="faq">
       <h2>Questions</h2>
       <!-- faq:start -->
-      <details open><summary>Is DropBG really free?</summary><p>Yes. No credits, no watermark, no daily cap, no account, and no ads. The free remover runs on your own device, so giving it away costs us nothing. An optional one-time Pro unlock pays for the site.</p></details>
-      <details><summary>Are my photos uploaded anywhere?</summary><p>No. The AI model downloads to your browser once and every image is processed on your own device. Open your browser's network tab while you use it: you will see the model download and nothing else.</p></details>
-      <details><summary>Why is the first image slow?</summary><p>The first run downloads the model, roughly 40 to 90 MB depending on your device. Your browser caches it, so the next images take a second or two. On a phone or a slow connection the first load can take a minute.</p></details>
-      <details><summary>How good is the cutout?</summary><p>Very good on people, products, pets and objects with a clear edge. Like every automatic tool, it is weakest on fine hair against a busy background, semi-transparent glass and thin wires. You get the full-resolution result to touch up if needed.</p></details>
-      <details><summary>Is this a replacement for remove.bg?</summary><p>For the everyday case, yes: one photo in, one transparent PNG out. Read the <a href="./remove-bg-alternative">full comparison</a> for what changes when remove.bg moves to Canva and what DropBG does differently.</p></details>
-      <details><summary>What is Pro Mode, and when is it coming?</summary><p>Pro is a planned one-time purchase, not a subscription. It will add batch download as a .zip, HD Refine (a second pass with a larger server-side model for hair and fine edges), background presets and a commercial licence with priority support. The free remover stays unlimited and full resolution. <a href="#pro-soon">Join the list</a> to hear when it launches and lock in the launch price.</p></details>
-      <details><summary>Can I use the results commercially?</summary><p>Yes. The output is your image. There is no licence on cutouts you make here.</p></details>
+      <details open><summary>Why does my transparent image look white in some apps?</summary><p>Some image viewers paint transparent pixels white or black. Drop the PNG onto a coloured slide or use the colour swatches above to preview it on a different background before you download.</p></details>
+      <details><summary>Can I make a GIF or JPG transparent?</summary><p>You can load a JPG or a single GIF frame, but the result is saved as a PNG because JPG has no transparency channel and GIF only supports hard one-bit transparency, which ruins hair and soft edges.</p></details>
+      <details><summary>Does it keep the original resolution?</summary><p>Yes. The PNG is the same pixel size as the image you dropped in. There is no free-tier downscale.</p></details>
+      <details><summary>Is this really free?</summary><p>Yes. No credits, no watermark, no daily cap, no account, and no ads. The remover runs on your own device, so giving it away costs us nothing. An optional one-time Pro unlock pays for the site.</p></details>
+      <details><summary>Is my image uploaded anywhere?</summary><p>No. The AI model downloads to your browser once and every image is processed on your own device. Open your browser's network tab while you use it: you will see the model download and nothing else.</p></details>
       <!-- faq:end -->
     </section>
   </main>

@@ -15,6 +15,7 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
@@ -191,3 +192,19 @@ html.is-pro .pro-tag { display: none; }
 @media (max-width: 420px) { .soon-row { flex-direction: column; } }
 .soon-msg { min-height: 18px; font-size: 13px; margin: 8px 0 0; color: var(--muted); }
 .soon-msg.ok { color: var(--ok); } .soon-msg.err { color: #b42318; }
+
+/* ---- hub: tool strip + variant content ------------------------------------- */
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.tool-card { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; color: var(--ink); text-decoration: none; transition: border-color .15s, transform .15s; }
+.tool-card:hover { border-color: var(--accent); text-decoration: none; transform: translateY(-1px); }
+.tool-card.is-current { border-color: var(--accent); background: var(--accent-soft); }
+.tool-card strong { display: block; font-size: 15px; margin-bottom: 2px; }
+.tool-card span { font-size: 13px; color: var(--muted); }
+.variant { padding-top: 48px; }
+.variant .prose { max-width: 720px; }
+.variant .prose h2 { font-size: clamp(24px, 3vw, 32px); margin: 0 0 8px; }
+.variant .prose h3 { font-size: 18px; margin: 24px 0 6px; }
+.variant .prose p, .variant .prose li { font-size: 16.5px; }
+.variant ol, .variant ul { padding-left: 22px; }
+.variant .tip { background: var(--accent-soft); border-radius: 12px; padding: 14px 16px; margin: 18px 0; }
+.variant .tip p { margin: 0; font-size: 15px; }
