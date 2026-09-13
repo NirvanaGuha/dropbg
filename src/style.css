@@ -175,15 +175,16 @@ html.is-pro .pro-tag { display: none; }
 
 /* ---- Pro coming soon ------------------------------------------------------ */
 .nav-pro .soon { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 2px 6px; margin-left: 4px; vertical-align: middle; }
-.soon-card { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 32px; box-shadow: var(--shadow); align-items: center; }
+.section-tight { padding: 28px 0 0; }
+.soon-card { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; box-shadow: var(--shadow); align-items: center; max-width: 1040px; margin: 0 auto; }
 @media (max-width: 760px) { .soon-card { grid-template-columns: 1fr; padding: 24px; } }
-.soon-copy .pill { margin-bottom: 12px; }
-.soon-copy h2 { font-size: clamp(22px, 3vw, 30px); letter-spacing: -.02em; margin: 0 0 14px; }
-.soon-list { margin: 0; padding: 0; list-style: none; color: #2a2e38; font-size: 15px; }
-.soon-list li { padding: 6px 0 6px 24px; position: relative; }
-.soon-list li::before { content: "✦"; position: absolute; left: 0; color: var(--accent); }
-.soon-fine { color: var(--muted); font-size: 13px; margin: 12px 0 0; }
-.soon-form { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.soon-copy .pill { margin-bottom: 8px; }
+.soon-copy h2 { font-size: clamp(19px, 2.4vw, 24px); letter-spacing: -.015em; margin: 0 0 8px; }
+.soon-list { margin: 0; padding: 0; list-style: none; color: #2a2e38; font-size: 14px; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.soon-list li { padding-left: 16px; position: relative; }
+.soon-list li::before { content: "✦"; position: absolute; left: 0; color: var(--accent); font-size: 11px; top: 3px; }
+.soon-fine { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+.soon-form { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
 .soon-form label { display: block; font-weight: 600; font-size: 15px; margin-bottom: 10px; }
 .soon-row { display: flex; gap: 8px; }
 .soon-row input { flex: 1; min-width: 0; font: 15px var(--font); padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }

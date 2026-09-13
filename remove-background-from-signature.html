@@ -66,6 +66,47 @@
       <button class="btn primary" id="zipall" type="button">Download all as .zip <span class="pro-tag">Pro</span></button>
     </div>
     <div id="results" class="results"></div>
+    <section class="section section-tight" id="pro-soon" data-waitlist-section>
+      <div class="soon-card">
+        <div class="soon-copy">
+          <div class="pill"><span class="dot"></span> Pro Mode · coming soon</div>
+          <h2>Free stays free. Pro adds the power-user extras.</h2>
+          <ul class="soon-list">
+            <li><strong>Batch .zip</strong> for whole folders</li>
+            <li><strong>HD Refine</strong> for hair and fine edges</li>
+            <li><strong>Background presets</strong> for marketplaces and brands</li>
+            <li><strong>Commercial licence</strong> and priority support</li>
+          </ul>
+          <p class="soon-fine">One-time purchase, no subscription. Early-list members get a founder's price for life.</p>
+        </div>
+        <form class="soon-form" id="waitlist" novalidate>
+          <label for="wl-email">Get notified when Pro launches</label>
+          <div class="soon-row">
+            <input id="wl-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+            <button class="btn primary" type="submit">Notify me</button>
+          </div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="sr" aria-hidden="true">
+          <p class="soon-msg" role="status" aria-live="polite"></p>
+          <p class="soon-fine">One email when it ships. No newsletter, no sharing your address.</p>
+        </form>
+      </div>
+    </section>
+    <section class="section section-tight" id="pro" data-pro-section hidden>
+      <h2>Free forever. Pro if you want more.</h2>
+      <p class="sub">The remover stays free, unlimited and full resolution. Pro is a one-time payment for the power-user extras.</p>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free</h3><div class="plan-price">$0</div>
+          <ul><li>Unlimited images</li><li>Full resolution PNG</li><li>Transparent or any colour</li><li>Runs in your browser, nothing uploaded</li></ul>
+          <a class="btn" href="#drop">Use it now</a>
+        </div>
+        <div class="plan plan-pro">
+          <h3>Pro <span class="pro-tag">one-time</span></h3><div class="plan-price"><span data-pro-price>$19</span> <small>once, not per month</small></div>
+          <ul><li>Everything in Free</li><li><strong>Batch download</strong> as a single .zip</li><li><strong>HD Refine</strong>: second pass with a larger model for hair, fur and fine edges</li><li><strong>Commercial licence</strong> and priority support</li><li>Works on all your devices</li></ul>
+          <a class="btn primary" href="#pro" data-pro-open>Get Pro</a>
+        </div>
+      </div>
+    </section>
 
     <!-- variant:start -->
     <section class="section variant"><div class="prose">
@@ -114,48 +155,7 @@
       </div>
     </section>
 
-    <section class="section" id="pro-soon" data-waitlist-section>
-      <div class="soon-card">
-        <div class="soon-copy">
-          <div class="pill"><span class="dot"></span> Pro Mode · coming soon</div>
-          <h2>The free remover stays free. Pro adds the power-user extras.</h2>
-          <ul class="soon-list">
-            <li><strong>Batch download.</strong> Drop a whole folder, get one .zip back.</li>
-            <li><strong>HD Refine.</strong> A second pass with a larger model for hair, fur and fine edges.</li>
-            <li><strong>Background presets.</strong> Marketplace white, brand colours, soft shadows.</li>
-            <li><strong>Commercial licence and priority support.</strong> One-time payment, no subscription, all your devices.</li>
-          </ul>
-          <p class="soon-fine">Planned as a one-time purchase. Early-list members get a founder's price for life.</p>
-        </div>
-        <form class="soon-form" id="waitlist" novalidate>
-          <label for="wl-email">Get notified when Pro launches</label>
-          <div class="soon-row">
-            <input id="wl-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
-            <button class="btn primary" type="submit">Notify me</button>
-          </div>
-          <input type="text" name="website" tabindex="-1" autocomplete="off" class="sr" aria-hidden="true">
-          <p class="soon-msg" role="status" aria-live="polite"></p>
-          <p class="soon-fine">One email when it ships. No newsletter, no sharing your address.</p>
-        </form>
-      </div>
-    </section>
 
-    <section class="section" id="pro" data-pro-section hidden>
-      <h2>Free forever. Pro if you want more.</h2>
-      <p class="sub">The remover stays free, unlimited and full resolution. Pro is a one-time payment for the power-user extras.</p>
-      <div class="plans">
-        <div class="plan">
-          <h3>Free</h3><div class="plan-price">$0</div>
-          <ul><li>Unlimited images</li><li>Full resolution PNG</li><li>Transparent or any colour</li><li>Runs in your browser, nothing uploaded</li></ul>
-          <a class="btn" href="#drop">Use it now</a>
-        </div>
-        <div class="plan plan-pro">
-          <h3>Pro <span class="pro-tag">one-time</span></h3><div class="plan-price"><span data-pro-price>$19</span> <small>once, not per month</small></div>
-          <ul><li>Everything in Free</li><li><strong>Batch download</strong> as a single .zip</li><li><strong>HD Refine</strong>: second pass with a larger model for hair, fur and fine edges</li><li><strong>Commercial licence</strong> and priority support</li><li>Works on all your devices</li></ul>
-          <a class="btn primary" href="#pro" data-pro-open>Get Pro</a>
-        </div>
-      </div>
-    </section>
 
     <section class="section faq" id="faq">
       <h2>Questions</h2>
