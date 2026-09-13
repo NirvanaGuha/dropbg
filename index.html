@@ -18,7 +18,7 @@
   {"@context":"https://schema.org","@graph":[
     {"@type":"WebApplication","name":"DropBG","url":"https://dropbg.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","browserRequirements":"Requires a modern browser with WebAssembly","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free background remover that runs entirely in the browser. No signup, no upload, no limits."},
     {"@type":"FAQPage","mainEntity":[
-      {"@type":"Question","name":"Is DropBG really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. There are no credits, no watermark, no daily cap and no account. The site is supported by ads."}},
+      {"@type":"Question","name":"Is DropBG really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. There are no credits, no watermark, no daily cap, no account and no ads. The free remover runs on your own device, so it costs us nothing to give away. An optional one-time Pro unlock pays for the site."}},
       {"@type":"Question","name":"Are my photos uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The AI model downloads to your browser once and every image is processed on your own device. You can verify this in your browser's network tab: no image data is sent anywhere."}},
       {"@type":"Question","name":"Why is the first image slow?","acceptedAnswer":{"@type":"Answer","text":"The first run downloads the model (roughly 40 to 90 MB depending on your device). Your browser caches it, so later images take a second or two."}},
       {"@type":"Question","name":"Is this a replacement for remove.bg?","acceptedAnswer":{"@type":"Answer","text":"For most everyday photos, yes. remove.bg's standalone site closes on December 1, 2026 and moves into Canva. DropBG gives you the same one-step workflow without a Canva account."}}
@@ -58,11 +58,11 @@
       <li>Transparent PNG</li>
       <li>No watermark</li>
       <li>No account</li>
+      <li>No ads</li>
       <li>Works offline after first load</li>
     </ul>
 
     <div id="status" class="status" aria-live="polite"></div>
-    <div class="ad-slot" id="ad-top"><!-- AD SLOT: paste an AdSense unit here once approved --></div>
     <div id="batchbar" class="batchbar" hidden>
       <span class="batch-count"></span>
       <button class="btn primary" id="zipall" type="button">Download all as .zip <span class="pro-tag">Pro</span></button>
@@ -88,9 +88,9 @@
             <li><strong>Batch download.</strong> Drop a whole folder, get one .zip back.</li>
             <li><strong>HD Refine.</strong> A second pass with a larger model for hair, fur and fine edges.</li>
             <li><strong>Background presets.</strong> Marketplace white, brand colours, soft shadows.</li>
-            <li><strong>No ads.</strong> One-time payment, no subscription, all your devices.</li>
+            <li><strong>Commercial licence and priority support.</strong> One-time payment, no subscription, all your devices.</li>
           </ul>
-          <p class="soon-fine">Planned as a one-time purchase around $9. Early-list members get it at the launch price for life.</p>
+          <p class="soon-fine">Planned as a one-time purchase. Early-list members get a founder's price for life.</p>
         </div>
         <form class="soon-form" id="waitlist" novalidate>
           <label for="wl-email">Get notified when Pro launches</label>
@@ -115,8 +115,8 @@
           <a class="btn" href="#drop">Use it now</a>
         </div>
         <div class="plan plan-pro">
-          <h3>Pro <span class="pro-tag">one-time</span></h3><div class="plan-price"><span data-pro-price>$9</span> <small>once, not per month</small></div>
-          <ul><li>Everything in Free</li><li><strong>Batch download</strong> as a single .zip</li><li><strong>HD Refine</strong>: second pass with a larger model for hair, fur and fine edges</li><li><strong>No ads</strong></li><li>Works on all your devices</li></ul>
+          <h3>Pro <span class="pro-tag">one-time</span></h3><div class="plan-price"><span data-pro-price>$19</span> <small>once, not per month</small></div>
+          <ul><li>Everything in Free</li><li><strong>Batch download</strong> as a single .zip</li><li><strong>HD Refine</strong>: second pass with a larger model for hair, fur and fine edges</li><li><strong>Commercial licence</strong> and priority support</li><li>Works on all your devices</li></ul>
           <a class="btn primary" href="#pro" data-pro-open>Get Pro</a>
         </div>
       </div>
@@ -124,12 +124,12 @@
 
     <section class="section faq" id="faq">
       <h2>Questions</h2>
-      <details open><summary>Is DropBG really free?</summary><p>Yes. No credits, no watermark, no daily cap, no account. The site is supported by ads, which is why there is nothing to pay for.</p></details>
+      <details open><summary>Is DropBG really free?</summary><p>Yes. No credits, no watermark, no daily cap, no account, and no ads. The free remover runs on your own device, so giving it away costs us nothing. An optional one-time Pro unlock pays for the site.</p></details>
       <details><summary>Are my photos uploaded anywhere?</summary><p>No. The AI model downloads to your browser once and every image is processed on your own device. Open your browser's network tab while you use it: you will see the model download and nothing else.</p></details>
       <details><summary>Why is the first image slow?</summary><p>The first run downloads the model, roughly 40 to 90 MB depending on your device. Your browser caches it, so the next images take a second or two. On a phone or a slow connection the first load can take a minute.</p></details>
       <details><summary>How good is the cutout?</summary><p>Very good on people, products, pets and objects with a clear edge. Like every automatic tool, it is weakest on fine hair against a busy background, semi-transparent glass and thin wires. You get the full-resolution result to touch up if needed.</p></details>
       <details><summary>Is this a replacement for remove.bg?</summary><p>For the everyday case, yes: one photo in, one transparent PNG out. Read the <a href="./remove-bg-alternative">full comparison</a> for what changes when remove.bg moves to Canva and what DropBG does differently.</p></details>
-      <details><summary>What is Pro Mode, and when is it coming?</summary><p>Pro is a planned one-time purchase, not a subscription. It will add batch download as a .zip, HD Refine (a second pass with a larger server-side model for hair and fine edges), background presets and no ads. The free remover stays unlimited and full resolution. <a href="#pro-soon">Join the list</a> to hear when it launches and lock in the launch price.</p></details>
+      <details><summary>What is Pro Mode, and when is it coming?</summary><p>Pro is a planned one-time purchase, not a subscription. It will add batch download as a .zip, HD Refine (a second pass with a larger server-side model for hair and fine edges), background presets and a commercial licence with priority support. The free remover stays unlimited and full resolution. <a href="#pro-soon">Join the list</a> to hear when it launches and lock in the launch price.</p></details>
       <details><summary>Can I use the results commercially?</summary><p>Yes. The output is your image. There is no licence on cutouts you make here.</p></details>
     </section>
   </main>

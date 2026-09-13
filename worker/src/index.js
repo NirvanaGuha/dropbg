@@ -35,6 +35,14 @@ export default {
     const licData = await lic.json();
     if (licData.status !== 'granted') return json({ error: `Licence is ${licData.status}.` }, 402, cors);
 
+    // Fair-use cap: N HD refines per key per calendar month (UTC). Bounds the only variable cost.
+    const cap = Number(env.REFINE_MONTHLY_CAP || 300);
+    const month = new Date().toISOString().slice(0, 7);
+    const capKey = `refine:${licData.id}:${month}`;
+    const used = Number((await env.WAITLIST.get(capKey)) || 0);
+    if (used >= cap) return json({ error: `You've used this month's ${cap} HD Refines. The counter resets on the 1st. Standard removal stays unlimited.` }, 429, cors);
+    await env.WAITLIST.put(capKey, String(used + 1), { expirationTtl: 40 * 24 * 3600 });
+
     // 2. Read the image.
     const max = Number(env.MAX_BYTES || 20000000);
     const len = Number(request.headers.get('Content-Length') || 0);

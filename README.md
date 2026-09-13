@@ -33,12 +33,12 @@ SITE_URL=https://other.example/ npm run deploy:cf   # override the origin if eve
 
 A GitHub Pages mirror is published from the `gh-pages` branch with `npm run deploy:gh`.
 
-## Pro unlock ($9 one-time)
+## Pro unlock ($19 one-time)
 
-Pro adds batch .zip download, HD Refine (server-side BiRefNet pass) and no ads. It is dormant until configured:
+Pro adds batch .zip download, HD Refine (server-side BiRefNet pass, capped at 300/month per key) and a commercial licence with priority support. The site runs no ads by decision (see research/PRICING-REVIEW-2026-09-13.md). Pro is dormant until configured:
 the Pro nav link, pricing section and batch bar stay hidden while `.env` is blank.
 
-1. **Polar.sh**: create an organisation, then a one-time product "DropBG Pro" at $9 with a *License Keys* benefit
+1. **Polar.sh**: create an organisation, then a one-time product "DropBG Pro" at **$19** with a *License Keys* benefit. Also create a **discount code** that brings it to $9 for waitlist members (founder's price, no expiry) and send it with the launch email
    (no activation limit, or e.g. 5 activations). Create a Checkout Link for it.
    Copy the organisation id (Settings → General) and the checkout link into `.env`:
    `VITE_POLAR_ORG_ID`, `VITE_POLAR_CHECKOUT_URL`.

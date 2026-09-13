@@ -92,7 +92,7 @@ function ensureDialog() {
         <ul class="pro-perks">
           <li><strong>Batch download.</strong> Drop a whole folder, get one .zip back.</li>
           <li><strong>HD Refine.</strong> A second pass with a larger model for hair, fur and fine edges.</li>
-          <li><strong>No ads, ever.</strong> One payment, no subscription, works on all your devices.</li>
+          <li><strong>Commercial licence and priority support.</strong> One payment, no subscription, works on all your devices.</li>
         </ul>
         <a class="btn primary pro-buy" href="${PRO.checkoutUrl}" target="_blank" rel="noopener">Get Pro for ${PRO.price}</a>
         <p class="pro-fine">You'll receive a licence key by email in under a minute. Paste it below to unlock.</p>

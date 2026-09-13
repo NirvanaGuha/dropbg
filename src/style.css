@@ -133,9 +133,6 @@ button { font: inherit; }
 .callout strong { color: var(--warn); }
 .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
 
-/* ad slot: stays collapsed until a unit is pasted in */
-.ad-slot { max-width: 760px; margin: 24px auto 0; min-height: 0; text-align: center; }
-.ad-slot:empty { display: none; }
 
 footer { margin-top: 72px; border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
