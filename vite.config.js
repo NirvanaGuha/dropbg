@@ -13,6 +13,8 @@ const SITE_URL = process.env.SITE_URL || 'https://dropbg.app/';
 export default defineConfig({
   base: './',
   appType: 'mpa',
+  server: { headers: { 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Embedder-Policy': 'require-corp' } },
+  preview: { headers: { 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Embedder-Policy': 'require-corp' } },
   plugins: [{
     name: 'site-url',
     transformIndexHtml(html) { return html.replaceAll('https://dropbg.app/', SITE_URL); },

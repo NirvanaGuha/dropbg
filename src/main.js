@@ -16,9 +16,21 @@ $('#year').textContent = new Date().getFullYear();
 pro.mountPro();
 
 // ---- model config -----------------------------------------------------------
-const hasWebGPU = typeof navigator !== 'undefined' && 'gpu' in navigator;
-const device = hasWebGPU ? 'gpu' : 'cpu';
-const model = hasWebGPU ? 'isnet_fp16' : 'isnet_quint8';
+// WebGPU + fp16 is fastest on desktop Chrome/Edge, but on phones and Safari the fp16 path can
+// return an all-zero mask (every pixel "removed"). Those get the CPU/WASM path with the int8 model,
+// and every device gets an empty-result safety net (see processJob) that reruns on CPU.
+const UA = navigator.userAgent || '';
+const hasWebGPU = 'gpu' in navigator;
+const isMobile = navigator.userAgentData?.mobile ?? /Android|iPhone|iPad|iPod|Mobile/i.test(UA);
+const isIPadOS = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+const isSafari = /Safari\//.test(UA) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox/.test(UA);
+const forced = new URLSearchParams(location.search).get('device'); // ?device=cpu|gpu for support/debugging
+let useGPU = hasWebGPU && !isMobile && !isIPadOS && !isSafari;
+if (forced === 'cpu') useGPU = false;
+if (forced === 'gpu' && hasWebGPU) useGPU = true;
+const GPU_CONFIG = { device: 'gpu', model: 'isnet_fp16' };
+const CPU_CONFIG = { device: 'cpu', model: 'isnet_quint8' };
+let { device, model } = useGPU ? GPU_CONFIG : CPU_CONFIG;
 
 const progressState = { bytes: new Map(), settled: false };
 function onProgress(key, current, total) {
@@ -31,19 +43,43 @@ function onProgress(key, current, total) {
   setStatus(`<strong>Downloading the AI model</strong> (one time, cached by your browser) · ${mb(cur)} / ${mb(tot)} MB`, pct);
 }
 
-const config = {
+let config = {
   device,
   model,
   progress: onProgress,
   output: { format: 'image/png', quality: 1 },
 };
+function describeDevice() { return config.device === 'gpu' ? 'your GPU (WebGPU)' : 'your CPU (WebAssembly)'; }
+
+// Switch to the CPU path for the rest of the session (after an empty GPU result).
+function fallbackToCPU() {
+  config = { ...config, ...CPU_CONFIG };
+  progressState.bytes.clear(); progressState.settled = false;
+  modelReady = null;
+  window.__dropbg.config = config;
+}
+
+// Share of pixels that are visible. ~0 means the model returned an empty mask.
+async function alphaCoverage(blob) {
+  const img = await blobToImage(blob);
+  const scale = Math.min(1, 256 / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(img.naturalWidth * scale)); c.height = Math.max(1, Math.round(img.naturalHeight * scale));
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  const d = ctx.getImageData(0, 0, c.width, c.height).data;
+  let visible = 0;
+  for (let i = 3; i < d.length; i += 4) if (d[i] > 8) visible++;
+  URL.revokeObjectURL(img.src);
+  return visible / (d.length / 4);
+}
 
 let modelReady = null;
 function ensureModel() {
   if (!modelReady) {
     modelReady = preload(config).then(() => {
       progressState.settled = true;
-      setStatus(`<strong>Model ready.</strong> Running on ${device === 'gpu' ? 'your GPU (WebGPU)' : 'your CPU (WebAssembly)'}.`, 100);
+      setStatus(`<strong>Model ready.</strong> Running on ${describeDevice()}.`, 100);
       setTimeout(hideStatus, 1800);
     }).catch((e) => {
       modelReady = null;
@@ -151,11 +187,20 @@ async function pump() {
   }
 }
 
+const EMPTY_THRESHOLD = 0.002; // <0.2% visible pixels = the mask is empty, not a real cutout
 async function processJob({ file, card }) {
   const t0 = performance.now();
   card.busy();
   try {
-    const blob = await removeBackground(file, config);
+    let blob = await removeBackground(file, config);
+    if (config.device === 'gpu' && (await alphaCoverage(blob)) < EMPTY_THRESHOLD) {
+      // Empty mask from the GPU path: switch this session to CPU and redo this image.
+      fallbackToCPU();
+      setStatus('<strong>Your GPU returned an empty result.</strong> Switching to the CPU model and retrying…', 0);
+      card.busy('Retrying on CPU…');
+      await ensureModel();
+      blob = await removeBackground(file, config);
+    }
     const ms = Math.round(performance.now() - t0);
     card.done(blob, ms);
   } catch (e) {
@@ -319,7 +364,7 @@ function renderCard(file) {
   return {
     file, baseName, composite,
     get done() { return Boolean(resultBlob); },
-    busy() { meta.textContent = 'Removing background…'; },
+    busy(label) { meta.textContent = label || 'Removing background…'; },
     done(blob, ms) {
       showResult(blob);
       stage.classList.remove('is-busy');
@@ -347,4 +392,4 @@ function blobToImage(blob) {
 function escapeHtml(s) { return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
 // Expose for automated testing only.
-window.__dropbg = { enqueue, config };
+window.__dropbg = { enqueue, config, alphaCoverage, fallbackToCPU, get device() { return config.device; } };
