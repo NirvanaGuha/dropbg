@@ -17,7 +17,7 @@ pro.mountPro();
 
 // ---- model config -----------------------------------------------------------
 // WebGPU + fp16 is fastest on desktop Chrome/Edge, but on phones and Safari the fp16 path can
-// return an all-zero mask (every pixel "removed"). Those get the CPU/WASM path with the int8 model,
+// return an all-zero mask (every pixel "removed"). Those get the CPU/WASM path instead,
 // and every device gets an empty-result safety net (see processJob) that reruns on CPU.
 const UA = navigator.userAgent || '';
 const hasWebGPU = 'gpu' in navigator;
@@ -29,8 +29,12 @@ let useGPU = hasWebGPU && !isMobile && !isIPadOS && !isSafari;
 if (forced === 'cpu') useGPU = false;
 if (forced === 'gpu' && hasWebGPU) useGPU = true;
 const GPU_CONFIG = { device: 'gpu', model: 'isnet_fp16' };
-const CPU_CONFIG = { device: 'cpu', model: 'isnet_quint8' };
+// Measured 2026-09-14: on WASM the fp16 model was faster than int8 (8.4 s vs 10.6 s) and matched the GPU mask,
+// while int8 produced ghosting at edges. So CPU also gets fp16; int8 stays reachable via ?model=isnet_quint8.
+const CPU_CONFIG = { device: 'cpu', model: 'isnet_fp16' };
 let { device, model } = useGPU ? GPU_CONFIG : CPU_CONFIG;
+const forcedModel = new URLSearchParams(location.search).get('model'); // ?model=isnet|isnet_fp16|isnet_quint8
+if (['isnet', 'isnet_fp16', 'isnet_quint8'].includes(forcedModel)) model = forcedModel;
 
 const progressState = { bytes: new Map(), settled: false };
 function onProgress(key, current, total) {
