@@ -27,8 +27,12 @@ function onProgress(key, current, total) {
   progressState.bytes.set(key, [current, total]);
   let cur = 0, tot = 0;
   for (const [c, t] of progressState.bytes.values()) { cur += c; tot += t; }
-  const pct = tot ? Math.min(100, Math.round((cur / tot) * 100)) : 0;
   const mb = (n) => (n / 1048576).toFixed(0);
+  if (!tot) { // host sent no Content-Length (chunked/gzip): show progress without a total
+    setStatus(`<strong>Downloading the AI model</strong> (one time, cached by your browser) · ${cur ? mb(cur) + ' MB so far' : 'starting…'}`, cur ? 50 : 5);
+    return;
+  }
+  const pct = Math.min(100, Math.round((cur / tot) * 100));
   setStatus(`<strong>Downloading the AI model</strong> (one time, cached by your browser) · ${mb(cur)} / ${mb(tot)} MB`, pct);
 }
 
