@@ -1,7 +1,7 @@
-import { removeBackground, preload } from '@imgly/background-removal';
 import { zipSync } from 'fflate';
 import { PRO } from './config.js';
 import * as pro from './pro.js';
+import { createEngine, createISNet, detectDevice } from './engine.js';
 
 // Canonical host: Pages _redirects cannot match hostnames, so collapse www here.
 if (location.hostname.startsWith('www.')) location.replace(location.href.replace('//www.', '//'));
@@ -15,30 +15,15 @@ const results = $('#results');
 $('#year').textContent = new Date().getFullYear();
 pro.mountPro();
 
-// ---- model config -----------------------------------------------------------
-// WebGPU + fp16 is fastest on desktop Chrome/Edge, but on phones and Safari the fp16 path can
-// return an all-zero mask (every pixel "removed"). Those get the CPU/WASM path instead,
-// and every device gets an empty-result safety net (see processJob) that reruns on CPU.
-const UA = navigator.userAgent || '';
-const hasWebGPU = 'gpu' in navigator;
-const isMobile = navigator.userAgentData?.mobile ?? /Android|iPhone|iPad|iPod|Mobile/i.test(UA);
-const isIPadOS = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
-const isSafari = /Safari\//.test(UA) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox/.test(UA);
-const forced = new URLSearchParams(location.search).get('device'); // ?device=cpu|gpu for support/debugging
-let useGPU = hasWebGPU && !isMobile && !isIPadOS && !isSafari;
-if (forced === 'cpu') useGPU = false;
-if (forced === 'gpu' && hasWebGPU) useGPU = true;
-const GPU_CONFIG = { device: 'gpu', model: 'isnet_fp16' };
-// Measured 2026-09-14: on WASM the fp16 model was faster than int8 (8.4 s vs 10.6 s) and matched the GPU mask,
-// while int8 produced ghosting at edges. So CPU also gets fp16; int8 stays reachable via ?model=isnet_quint8.
-const CPU_CONFIG = { device: 'cpu', model: 'isnet_fp16' };
-let { device, model } = useGPU ? GPU_CONFIG : CPU_CONFIG;
-const forcedModel = new URLSearchParams(location.search).get('model'); // ?model=isnet|isnet_fp16|isnet_quint8
-if (['isnet', 'isnet_fp16', 'isnet_quint8'].includes(forcedModel)) model = forcedModel;
+// ---- engine -----------------------------------------------------------------
+// BiRefNet_lite by default (see engine.js). Desktop Chrome/Edge run it on WebGPU; phones and Safari on
+// multi-threaded WebAssembly. An empty-mask check after every GPU run drops the session to CPU and retries.
+let device = detectDevice();
+let engine = createEngine(device);
 
 const progressState = { bytes: new Map(), settled: false };
 function onProgress(key, current, total) {
-  if (progressState.settled) return; // cached re-reads during inference are not a download
+  if (progressState.settled) return;
   progressState.bytes.set(key, [current, total]);
   let cur = 0, tot = 0;
   for (const [c, t] of progressState.bytes.values()) { cur += c; tot += t; }
@@ -47,20 +32,36 @@ function onProgress(key, current, total) {
   setStatus(`<strong>Downloading the AI model</strong> (one time, cached by your browser) · ${mb(cur)} / ${mb(tot)} MB`, pct);
 }
 
-let config = {
-  device,
-  model,
-  progress: onProgress,
-  output: { format: 'image/png', quality: 1 },
-};
-function describeDevice() { return config.device === 'gpu' ? 'your GPU (WebGPU)' : 'your CPU (WebAssembly)'; }
+let modelReady = null;
+function ensureModel() {
+  if (!modelReady) {
+    modelReady = engine.load(onProgress).then(() => {
+      progressState.settled = true;
+      setStatus(`<strong>Model ready.</strong> ${engine.describe()}.`, 100);
+      setTimeout(hideStatus, 1800);
+    }).catch(async (e) => {
+      // BiRefNet failed to initialise (unsupported dtype/backend, blocked download): fall back to ISNet once.
+      if (engine.name !== 'isnet') {
+        console.warn('BiRefNet init failed, falling back to ISNet:', e);
+        engine = createISNet(device);
+        progressState.bytes.clear(); progressState.settled = false;
+        modelReady = null;
+        return ensureModel();
+      }
+      modelReady = null;
+      setStatus(`<strong>Could not load the model.</strong> ${describeError(e)}`, 0);
+      throw e;
+    });
+  }
+  return modelReady;
+}
 
-// Switch to the CPU path for the rest of the session (after an empty GPU result).
+// Switch this session to the CPU path (after an empty GPU result) and reload the engine.
 function fallbackToCPU() {
-  config = { ...config, ...CPU_CONFIG };
+  device = 'cpu';
+  engine = engine.name === 'isnet' ? createISNet('cpu') : createEngine('cpu');
   progressState.bytes.clear(); progressState.settled = false;
   modelReady = null;
-  window.__dropbg.config = config;
 }
 
 // Share of pixels that are visible. ~0 means the model returned an empty mask.
@@ -76,22 +77,6 @@ async function alphaCoverage(blob) {
   for (let i = 3; i < d.length; i += 4) if (d[i] > 8) visible++;
   URL.revokeObjectURL(img.src);
   return visible / (d.length / 4);
-}
-
-let modelReady = null;
-function ensureModel() {
-  if (!modelReady) {
-    modelReady = preload(config).then(() => {
-      progressState.settled = true;
-      setStatus(`<strong>Model ready.</strong> Running on ${describeDevice()}.`, 100);
-      setTimeout(hideStatus, 1800);
-    }).catch((e) => {
-      modelReady = null;
-      setStatus(`<strong>Could not load the model.</strong> ${describeError(e)}`, 0);
-      throw e;
-    });
-  }
-  return modelReady;
 }
 
 // Warm the model in the background so the first drop feels fast.
@@ -196,31 +181,32 @@ async function processJob({ file, card }) {
   const t0 = performance.now();
   card.busy();
   try {
-    let blob = await removeBackground(file, config);
-    if (config.device === 'gpu' && (await alphaCoverage(blob)) < EMPTY_THRESHOLD) {
-      // Empty mask from the GPU path: switch this session to CPU and redo this image.
+    let blob = await engine.remove(file);
+    if (device === 'gpu' && (await alphaCoverage(blob)) < EMPTY_THRESHOLD) {
       fallbackToCPU();
-      setStatus('<strong>Your GPU returned an empty result.</strong> Switching to the CPU model and retrying…', 0);
+      setStatus('<strong>Your GPU returned an empty result.</strong> Switching to the CPU path and retrying…', 0);
       card.busy('Retrying on CPU…');
       await ensureModel();
-      blob = await removeBackground(file, config);
+      blob = await engine.remove(file);
     }
     const ms = Math.round(performance.now() - t0);
     card.done(blob, ms);
   } catch (e) {
+    // BiRefNet failed on this image (driver/shader edge case): finish the session on ISNet and redo it.
+    if (engine.name === 'birefnet') {
+      console.warn('BiRefNet failed, switching to ISNet:', e);
+      engine = createISNet(device);
+      progressState.bytes.clear(); progressState.settled = false; modelReady = null;
+      card.busy('Retrying with the fallback model…');
+      try {
+        await ensureModel();
+        const blob = await engine.remove(file);
+        card.done(blob, Math.round(performance.now() - t0));
+        return;
+      } catch (e2) { card.fail(describeError(e2)); return; }
+    }
     card.fail(describeError(e));
   }
-}
-
-// ---- post-download nudge (once per page load, at the moment of value) -----------------
-let downloadNudgeShown = false;
-function showPostDownloadNudge(cardEl) {
-  if (downloadNudgeShown || PRO.enabled) return;
-  const n = pro.waitlistNudge('dropbg.app/post-download', 'Got what you needed?');
-  if (!n) return;
-  downloadNudgeShown = true;
-  cardEl.appendChild(n);
-  n.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // ---- card UI ----------------------------------------------------------------
@@ -396,4 +382,4 @@ function blobToImage(blob) {
 function escapeHtml(s) { return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
 // Expose for automated testing only.
-window.__dropbg = { enqueue, config, alphaCoverage, fallbackToCPU, get device() { return config.device; } };
+window.__dropbg = { enqueue, alphaCoverage, fallbackToCPU, get device() { return device; }, get engine() { return engine.name; } };

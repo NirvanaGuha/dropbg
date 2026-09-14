@@ -7,8 +7,11 @@ Mirror: https://nirvanaguha.github.io/dropbg/ (GitHub Pages, canonicals point at
 
 ## How it works
 
-Images are segmented on the user's device with an IS-Net model executed by ONNX Runtime Web
-(WebGPU where available, WebAssembly otherwise). No image data is sent to any server. The model
+Images are segmented on the user's device. Desktop browsers with WebGPU run BiRefNet_lite (MIT) through
+Transformers.js, using the graph-patched export `jiabins0303/birefnet-lite-1024-webgpu` (the stock export exceeds
+ORT's WebGPU storage-buffer limit). Phones and Safari run IS-Net fp16 on multi-threaded WebAssembly via
+`@imgly/background-removal`, because BiRefNet_lite at 1024 px exhausts WASM memory. See `src/engine.js`.
+Debug flags: `?engine=isnet|birefnet`, `?device=cpu|gpu`, `?model=isnet|isnet_fp16|isnet_quint8`. No image data is sent to any server. The model
 files are fetched once from a CDN and cached by the browser.
 
 ## Develop
@@ -55,7 +58,8 @@ Local testing without a Polar account: put dummy values in `.env.development.loc
 
 ## Licence
 
-This site's own code is released under the GNU AGPL-3.0. It depends on
-[`@imgly/background-removal`](https://github.com/imgly/background-removal-js) (AGPL-3.0) and
-ONNX Runtime Web (MIT). The complete corresponding source for the deployed site is this repository.
+This site's own code is released under the GNU AGPL-3.0 while it depends on
+[`@imgly/background-removal`](https://github.com/imgly/background-removal-js) (AGPL-3.0) for the CPU path.
+The GPU path uses BiRefNet_lite (MIT) via Transformers.js (Apache-2.0) and ONNX Runtime Web (MIT).
+Once the CPU path also moves to a quantised BiRefNet export, the site can relicense to MIT. The complete corresponding source for the deployed site is this repository.
 Cutouts you create with the tool are yours; no licence applies to them.

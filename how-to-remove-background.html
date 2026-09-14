@@ -10,7 +10,7 @@
   <link rel="canonical" href="https://dropbg.app/how-to-remove-background">
   <meta property="og:title" content="How to remove a background from an image, free">
   <meta property="og:image" content="https://dropbg.app/og.png">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to remove a background from an image with DropBG","totalTime":"PT1M","step":[{"@type":"HowToStep","name":"Open DropBG","text":"Go to dropbg.app. No account is needed."},{"@type":"HowToStep","name":"Add your image","text":"Click Choose images, drag a file onto the page, or paste from the clipboard. JPG, PNG and WebP work. You can add several at once."},{"@type":"HowToStep","name":"Wait for the model","text":"On first use the AI model downloads to your browser (40 to 90 MB). It is cached afterwards."},{"@type":"HowToStep","name":"Check the result","text":"Drag the slider across the image to compare the original with the cutout."},{"@type":"HowToStep","name":"Pick a background","text":"Keep it transparent, or choose white, black, a preset or a custom colour."},{"@type":"HowToStep","name":"Download","text":"Click Download PNG, or Copy to paste it straight into another app."}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to remove a background from an image with DropBG","totalTime":"PT1M","step":[{"@type":"HowToStep","name":"Open DropBG","text":"Go to dropbg.app. No account is needed."},{"@type":"HowToStep","name":"Add your image","text":"Click Choose images, drag a file onto the page, or paste from the clipboard. JPG, PNG and WebP work. You can add several at once."},{"@type":"HowToStep","name":"Wait for the model","text":"On first use the AI model downloads to your browser (85 to 110 MB). It is cached afterwards."},{"@type":"HowToStep","name":"Check the result","text":"Drag the slider across the image to compare the original with the cutout."},{"@type":"HowToStep","name":"Pick a background","text":"Keep it transparent, or choose white, black, a preset or a custom colour."},{"@type":"HowToStep","name":"Download","text":"Click Download PNG, or Copy to paste it straight into another app."}]}</script>
   <script>if(location.hostname.startsWith('www.'))location.replace(location.href.replace('//www.','//'));</script>
 </head>
 <body>
@@ -30,7 +30,7 @@
     <ol>
       <li><strong>Open <a href="./">DropBG</a>.</strong> There is nothing to sign up for.</li>
       <li><strong>Add your image.</strong> Click <em>Choose images</em>, drag a file anywhere onto the page, or paste with Ctrl+V (Cmd+V on a Mac). JPG, PNG and WebP all work. Drop several files at once if you have a batch.</li>
-      <li><strong>Let the model load the first time.</strong> Your browser downloads the AI model once, about 40 to 90 MB depending on your device. A progress bar shows the download. Every later image skips this step.</li>
+      <li><strong>Let the model load the first time.</strong> Your browser downloads the AI model once, about 110 MB on a desktop and 85 MB on a phone. A progress bar shows the download. Every later image skips this step.</li>
       <li><strong>Compare.</strong> Drag the slider left and right across the picture to check the cutout against the original.</li>
       <li><strong>Choose a background.</strong> Transparent is the default. Click white, black, a preset colour, or the rainbow swatch for any custom colour. This is handy for product photos that need a plain white background for a marketplace listing.</li>
       <li><strong>Download or copy.</strong> <em>Download PNG</em> saves the full-resolution file. <em>Copy</em> puts the PNG on your clipboard so you can paste it into Slides, Figma, Keynote or a chat.</li>
@@ -39,7 +39,7 @@
     <div class="cta-row"><a class="btn primary" href="./">Open the tool</a></div>
 
     <h2>What the AI is actually doing</h2>
-    <p>The model behind DropBG is a <em>salient object segmentation</em> network from the IS-Net family, trained on the DIS5K dataset of finely annotated images. Given a photo, it predicts an alpha matte: for every pixel, how much of it belongs to the main subject. Solid subject pixels get full opacity, background pixels get zero, and edge pixels such as hair or fabric get values in between so they blend cleanly onto a new background.</p>
+    <p>On desktop browsers with WebGPU, DropBG runs <em>BiRefNet</em>, a 2024 bilateral-reference segmentation network that is the current open-source reference for high-resolution cutouts; it is the same family our Pro HD pass runs at full size on a server. On phones and Safari it runs <em>IS-Net</em>, a lighter model from the same dichotomous-segmentation lineage that fits the memory a browser tab gets on a phone. Both predict an alpha matte: for every pixel, how much of it belongs to the main subject. Solid subject pixels get full opacity, background pixels get zero, and edge pixels such as hair or fabric get values in between so they blend cleanly onto a new background.</p>
     <p>That matte is then multiplied into your original image to produce a PNG with a real transparency channel. Nothing is painted or regenerated, which is why the output is faithful to the source at full resolution.</p>
 
     <h2>Why it can run in a browser at all</h2>
