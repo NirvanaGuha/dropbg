@@ -1,0 +1,180 @@
+<!doctype html>
+<!-- GENERATED from index.html + scripts/variants.mjs. Edit those, not this file. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Remove Background From a Logo – Free Transparent Logo Maker</title>
+  <meta name="description" content="Remove the white or coloured background from a logo and download a transparent PNG. Free, runs in your browser, no upload, no signup, full resolution.">
+  <link rel="canonical" href="https://dropbg.app/remove-background-from-logo">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Remove Background From a Logo – Free Transparent Logo Maker">
+  <meta property="og:description" content="Remove the white or coloured background from a logo and download a transparent PNG. Free, runs in your browser, no upload, no signup, full resolution.">
+  <meta property="og:url" content="https://dropbg.app/remove-background-from-logo">
+  <meta property="og:image" content="https://dropbg.app/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f5eff'/%3E%3Cpath d='M8 8h8v8H8zM16 16h8v8h-8z' fill='%23fff'/%3E%3C/svg%3E">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebApplication","name":"DropBG","url":"https://dropbg.app/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser)","browserRequirements":"Requires a modern browser with WebAssembly","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free background remover that runs entirely in the browser. No signup, no upload, no limits."},
+    {"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Will text in the logo stay sharp?","acceptedAnswer":{"@type":"Answer","text":"Yes, at the resolution you provide. The tool does not redraw anything, it only makes background pixels transparent, so edges are as sharp as the source."}},{"@type":"Question","name":"Can I change the background to my brand colour?","acceptedAnswer":{"@type":"Answer","text":"Yes. Use the rainbow swatch under the result to pick any colour, then download. For transparency, keep the checkerboard swatch selected."}},{"@type":"Question","name":"Can it vectorise the logo?","acceptedAnswer":{"@type":"Answer","text":"No. The output is a PNG bitmap. For a vector, trace the PNG in Illustrator, Inkscape or Figma, or ask the brand for the original file."}},{"@type":"Question","name":"Is this really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. No credits, no watermark, no daily cap, no account, and no ads. The remover runs on your own device, so giving it away costs us nothing. An optional one-time Pro unlock pays for the site."}},{"@type":"Question","name":"Is my image uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The AI model downloads to your browser once and every image is processed on your own device. Open your browser's network tab while you use it: you will see the model download and nothing else."}}]}
+  ]}
+  </script>
+  <script type="module" crossorigin src="./assets/main-MRWuS-hs.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/style-CifLAa2K.css">
+</head>
+<body>
+  <header class="wrap nav">
+    <a class="brand" href="./"><span class="brand-mark"></span>DropBG</a>
+    <nav class="nav-links">
+      <a href="./remove-bg-alternative">remove.bg alternative</a>
+      <a class="hide-sm" href="./how-to-remove-background">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a href="#pro" class="nav-pro" data-pro-open data-pro-badge hidden>Get Pro</a>
+      <a href="#pro-soon" class="nav-pro" data-waitlist-nav>Pro <span class="soon">soon</span></a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <!-- hero:start -->
+    <section class="hero">
+      <div class="pill"><span class="dot"></span> Logos and marks. Nothing uploaded.</div>
+      <h1>Remove the background <em>from a logo.</em></h1>
+      <p>Got a logo as a JPG with a white box around it? Drop it in and get a transparent PNG you can place on any colour, slide or website header.</p>
+    </section>
+    <!-- hero:end -->
+
+    <div id="drop" class="drop" role="region" aria-label="Upload area">
+      <input id="file" type="file" accept="image/*" multiple aria-label="Choose images">
+      <button class="big" type="button" id="pick">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0l-4 4m4-4l4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+        Choose images
+      </button>
+      <p class="hint">or drag &amp; drop anywhere, or paste with <kbd>Ctrl</kbd>+<kbd>V</kbd>. JPG, PNG, WebP. Several at once is fine.</p>
+    </div>
+    <ul class="trust">
+      <li>Full resolution output</li>
+      <li>Transparent PNG</li>
+      <li>No watermark</li>
+      <li>No account</li>
+      <li>No ads</li>
+      <li>Works offline after first load</li>
+    </ul>
+
+    <div id="status" class="status" aria-live="polite"></div>
+    <div id="batchbar" class="batchbar" hidden>
+      <span class="batch-count"></span>
+      <button class="btn primary" id="zipall" type="button">Download all as .zip <span class="pro-tag">Pro</span></button>
+    </div>
+    <div id="results" class="results"></div>
+    <section class="section section-tight" id="pro-soon" data-waitlist-section>
+      <div class="soon-card">
+        <div class="soon-copy">
+          <div class="pill"><span class="dot"></span> Pro Mode · coming soon</div>
+          <h2>Free stays free. Pro adds the power-user extras.</h2>
+          <ul class="soon-list">
+            <li><strong>Batch .zip</strong> for whole folders</li>
+            <li><strong>HD Refine</strong> for hair and fine edges</li>
+            <li><strong>Background presets</strong> for marketplaces and brands</li>
+            <li><strong>Commercial licence</strong> and priority support</li>
+          </ul>
+          <p class="soon-fine">One-time purchase, no subscription. Early-list members get a founder's price for life.</p>
+        </div>
+        <form class="soon-form" id="waitlist" novalidate>
+          <label for="wl-email">Get notified when Pro launches</label>
+          <div class="soon-row">
+            <input id="wl-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+            <button class="btn primary" type="submit">Notify me</button>
+          </div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="sr" aria-hidden="true">
+          <p class="soon-msg" role="status" aria-live="polite"></p>
+          <p class="soon-fine">One email when it ships. No newsletter, no sharing your address.</p>
+        </form>
+      </div>
+    </section>
+    <section class="section section-tight" id="pro" data-pro-section hidden>
+      <h2>Free forever. Pro if you want more.</h2>
+      <p class="sub">The remover stays free, unlimited and full resolution. Pro is a one-time payment for the power-user extras.</p>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free</h3><div class="plan-price">$0</div>
+          <ul><li>Unlimited images</li><li>Full resolution PNG</li><li>Transparent or any colour</li><li>Runs in your browser, nothing uploaded</li></ul>
+          <a class="btn" href="#drop">Use it now</a>
+        </div>
+        <div class="plan plan-pro">
+          <h3>Pro <span class="pro-tag">one-time</span></h3><div class="plan-price"><span data-pro-price>$19</span> <small>once, not per month</small></div>
+          <ul><li>Everything in Free</li><li><strong>Batch download</strong> as a single .zip</li><li><strong>HD Refine</strong>: second pass with a larger model for hair, fur and fine edges</li><li><strong>Commercial licence</strong> and priority support</li><li>Works on all your devices</li></ul>
+          <a class="btn primary" href="#pro" data-pro-open>Get Pro</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- variant:start -->
+    <section class="section variant"><div class="prose">
+      <h2>Getting a clean logo cutout</h2>
+      <ol>
+        <li>Use the largest version of the logo you have. A 2000 px file gives cleaner edges than a 300 px thumbnail pulled from a website.</li>
+        <li>Drop it above. Flat shapes and text on a plain background come out very clean.</li>
+        <li>Check thin strokes and small text with the compare slider, then download.</li>
+      </ol>
+      <h3>When to ask for the original instead</h3>
+      <p>A logo that exists as a vector file (SVG, AI, EPS or PDF) is infinitely scalable and already has no background. If you can get that file from the designer or the brand's press page, use it. This tool is for the common case where all you have is a flattened JPG or PNG.</p>
+      <h3>Tricky logos</h3>
+      <ul>
+        <li><strong>White logos on white.</strong> Invert the colours first in any editor, remove the background, then invert back.</li>
+        <li><strong>Gradients and glows.</strong> Soft edges are kept as partial transparency, which is what you want.</li>
+        <li><strong>Logos with a background that is part of the design.</strong> The model keeps the most salient shape. If it removes a shape you wanted, place the result over the original colour using the custom swatch.</li>
+      </ul>
+      <div class="tip"><p><strong>Tip.</strong> Company logos are trademarks. Removing a background for your own presentation or a partner page is normal use; check brand guidelines before altering colours or proportions.</p></div>
+    </div></section>
+    <!-- variant:end -->
+
+    <section class="section tools-strip" id="tools">
+      <h2>One engine, the right preset for the job</h2>
+      <p class="sub">Same on-device model, tuned defaults for common tasks. All free, all unlimited.</p>
+      <!-- tools:start -->
+      <div class="tool-grid">
+        <a class="tool-card" href="./"><strong>Background remover</strong><span>The general-purpose tool</span></a>
+        <a class="tool-card" href="./transparent-background-maker"><strong>Transparent background maker</strong><span>Any image to a clean transparent PNG</span></a>
+        <a class="tool-card" href="./png-maker"><strong>PNG maker</strong><span>Photo to transparent PNG, one step</span></a>
+        <a class="tool-card is-current" href="./remove-background-from-logo" aria-current="page"><strong>Logo background remover</strong><span>Kill the white box behind a logo</span></a>
+        <a class="tool-card" href="./remove-background-from-signature"><strong>Signature background remover</strong><span>Paper photo to transparent signature</span></a>
+        <a class="tool-card" href="./white-background-maker"><strong>White background maker</strong><span>Product photos on pure white</span></a>
+        <a class="tool-card" href="./bulk-background-remover"><strong>Bulk background remover</strong><span>Whole folders, processed on your device</span></a>
+      </div>
+      <!-- tools:end -->
+    </section>
+
+    <section class="section">
+      <h2>Why people are switching to DropBG</h2>
+      <p class="sub">remove.bg's standalone website shuts down on December 1, 2026 and moves into Canva. If you just want a background gone, without a design suite and a login, this is the tool.</p>
+      <div class="grid3">
+        <div class="feature"><h3>Private by design</h3><p>The model runs inside your browser. Your photos never touch a server, which also means there is nothing for us to store, leak or train on.</p></div>
+        <div class="feature"><h3>Genuinely unlimited</h3><p>No credits, no "1 free HD download per month", no watermark. Processing happens on your hardware, so there is no per-image cost to pass on.</p></div>
+        <div class="feature"><h3>Fast after the first run</h3><p>The model is cached by your browser once. From then on, most photos finish in one to three seconds, and it keeps working without an internet connection.</p></div>
+      </div>
+    </section>
+
+
+
+    <section class="section faq" id="faq">
+      <h2>Questions</h2>
+      <!-- faq:start -->
+      <details open><summary>Will text in the logo stay sharp?</summary><p>Yes, at the resolution you provide. The tool does not redraw anything, it only makes background pixels transparent, so edges are as sharp as the source.</p></details>
+      <details><summary>Can I change the background to my brand colour?</summary><p>Yes. Use the rainbow swatch under the result to pick any colour, then download. For transparency, keep the checkerboard swatch selected.</p></details>
+      <details><summary>Can it vectorise the logo?</summary><p>No. The output is a PNG bitmap. For a vector, trace the PNG in Illustrator, Inkscape or Figma, or ask the brand for the original file.</p></details>
+      <details><summary>Is this really free?</summary><p>Yes. No credits, no watermark, no daily cap, no account, and no ads. The remover runs on your own device, so giving it away costs us nothing. An optional one-time Pro unlock pays for the site.</p></details>
+      <details><summary>Is my image uploaded anywhere?</summary><p>No. The AI model downloads to your browser once and every image is processed on your own device. Open your browser's network tab while you use it: you will see the model download and nothing else.</p></details>
+      <!-- faq:end -->
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div>© <span id="year"></span> DropBG. Built on open-source AI. Your images never leave your device.</div>
+      <div><a href="./#tools">All tools</a><a href="./how-to-remove-background">How to remove a background</a><a href="./remove-bg-alternative">remove.bg alternative</a><a href="./privacy">Privacy</a></div>
+    </div>
+  </footer>
+
+</body>
+</html>

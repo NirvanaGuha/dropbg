@@ -1,0 +1,7 @@
+# Cross-origin isolation enables SharedArrayBuffer -> multi-threaded WebAssembly for the CPU model path.
+# All cross-origin resources we load (imgly CDN, Polar, our worker) send CORS/CORP headers, so require-corp is safe.
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
