@@ -3,3 +3,11 @@ dist
 .DS_Store
 *.local
 worker/.wrangler
+/models
+/tools/quant/.venv
+/tools/quant/src_model
+/tools/quant/pt_model
+/tools/quant/out
+/tools/quant/*.onnx
+/tools/quant/*.npy
+/tools/quant/*.jpg

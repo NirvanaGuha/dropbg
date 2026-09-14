@@ -11,6 +11,11 @@
 // ?engine=isnet|birefnet and ?model= override the choice for support/debugging.
 
 const BIREFNET_ID = 'jiabins0303/birefnet-lite-1024-webgpu';
+// WASM: our own re-export of BiRefNet_lite at a smaller fixed input (tools/quant/export.py; deformable conv replaced
+// by a pure grid_sample implementation so it exports natively). Peak memory ~2.5 GB at 640 px vs ~8 GB at 1024.
+const WASM_MODEL = import.meta.env.VITE_WASM_MODEL || 'birefnet-lite-640';
+const WASM_DTYPE = new URLSearchParams(location.search).get('dtype') || import.meta.env.VITE_WASM_DTYPE || 'fp16'; // ?dtype=fp32|fp16|q8
+const MODELS_BASE = (import.meta.env.VITE_MODELS_BASE || `${location.origin}/models/`).replace(/\/?$/, '/');
 
 export function detectDevice() {
   const UA = navigator.userAgent || '';
@@ -28,7 +33,6 @@ export function detectDevice() {
 // ---- BiRefNet_lite (Transformers.js) ----------------------------------------------------
 export function createBiRefNet(device) {
   let model = null, processor = null, tf = null;
-  if (device !== 'gpu') throw new Error('BiRefNet_lite runs on WebGPU only in this build');
 
   async function load(onProgress) {
     if (model) return;
@@ -37,14 +41,16 @@ export function createBiRefNet(device) {
     env.allowLocalModels = false;
     // Progress: Transformers.js emits {status:'progress', file, loaded, total} per file.
     const progress_callback = (p) => { if (p.status === 'progress' && onProgress) onProgress(p.file, p.loaded, p.total); };
-    processor = await AutoProcessor.from_pretrained(BIREFNET_ID, { progress_callback });
-    // Per the export's notes: fp16 weights file, loaded with dtype fp32 (no runtime casts), WebGPU only.
-    model = await AutoModel.from_pretrained(BIREFNET_ID, {
-      dtype: 'fp32',
-      model_file_name: 'model_fp16',
-      device: 'webgpu',
-      progress_callback,
-    });
+    if (device === 'gpu') {
+      env.remoteHost = 'https://huggingface.co/'; env.remotePathTemplate = '{model}/resolve/{revision}/';
+      processor = await AutoProcessor.from_pretrained(BIREFNET_ID, { progress_callback });
+      // Per the export's notes: fp16 weights file, loaded with dtype fp32 (no runtime casts), WebGPU only.
+      model = await AutoModel.from_pretrained(BIREFNET_ID, { dtype: 'fp32', model_file_name: 'model_fp16', device: 'webgpu', progress_callback });
+    } else {
+      env.remoteHost = MODELS_BASE; env.remotePathTemplate = '{model}/';
+      processor = await AutoProcessor.from_pretrained(WASM_MODEL, { progress_callback });
+      model = await AutoModel.from_pretrained(WASM_MODEL, { dtype: WASM_DTYPE, device: 'wasm', progress_callback });
+    }
   }
 
   async function remove(file) {
@@ -73,7 +79,7 @@ export function createBiRefNet(device) {
     return c.convertToBlob({ type: 'image/png' });
   }
 
-  return { name: 'birefnet', load, remove, describe: () => 'BiRefNet on your GPU (WebGPU)' };
+  return { name: 'birefnet', load, remove, describe: () => `BiRefNet on ${device === 'gpu' ? 'your GPU (WebGPU)' : 'your CPU (WebAssembly)'}` };
 }
 
 // ---- ISNet (IMG.LY) fallback ------------------------------------------------------------
@@ -97,6 +103,7 @@ export function createEngine(device) {
   const q = new URLSearchParams(location.search);
   const forced = q.get('engine');
   if (forced === 'isnet') return createISNet(device, q.get('model'));
-  if (device === 'gpu') return createBiRefNet(device); // ?engine=birefnet on a CPU device is ignored: no WASM build
-  return createISNet(device, q.get('model'));
+  if (forced === 'birefnet' || device === 'gpu') return createBiRefNet(device);
+  // CPU default stays ISNet until the WASM BiRefNet export is verified on phones; flip with VITE_CPU_ENGINE=birefnet.
+  return (import.meta.env.VITE_CPU_ENGINE === 'birefnet') ? createBiRefNet(device) : createISNet(device, q.get('model'));
 }
